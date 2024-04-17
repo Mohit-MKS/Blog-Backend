@@ -1,7 +1,7 @@
 import express from 'express';
-import path from 'path';
-import { rootDir } from '../util/path';
-import { products } from './admin';
+
+import shopController from '../controllers/shop';
+
 
 const shopRouter = express.Router();
 
@@ -12,18 +12,23 @@ const shopRouter = express.Router();
 // });
 
 
-shopRouter.get('/', (req, res, next) => {
-    const productss = products;
-    res.render('shop', {
-      prods: products,
-      pageTitle: 'Shop',
-      path: '/',
-      hasProducts: products.length > 0,
-      activeShop: true,
-      productCSS: true
-    });
-  });
- 
+
+shopRouter.get('/', shopController.getIndex);
+
+shopRouter.get('/products', shopController.getProducts);
+
+shopRouter.get('/products/:productId', shopController.getProduct);
+
+shopRouter.get('/cart', shopController.getCart);
+
+shopRouter.post('/cart', shopController.postCart);
+
+shopRouter.post('/cart-delete-item', shopController.postCartDeleteProduct);
+
+shopRouter.get('/orders', shopController.getOrders);
+
+shopRouter.get('/checkout', shopController.getCheckout);
+
 
 
 export { shopRouter };

@@ -43,3 +43,5 @@ class Product {
         getProductsFromFile(cb);
     }
 };
+
+export { Product }
