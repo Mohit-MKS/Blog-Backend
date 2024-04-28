@@ -23,6 +23,12 @@ const validateSignIn = [
         .notEmpty().withMessage("Password is required")
 ];
 
+const validateEmail = [
+    body("email")
+        .notEmpty().withMessage("Email is required")
+        .isEmail().withMessage("Invalid email")
+];
+
 
 const validateErrors = (req, res, next) => {
     const errors = validationResult(req);
@@ -41,4 +47,4 @@ const validateErrors = (req, res, next) => {
 
 
 
-export { validateSignUp, validateSignIn, validateErrors }
+export { validateSignUp, validateSignIn, validateEmail, validateErrors }

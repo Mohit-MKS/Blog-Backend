@@ -5,7 +5,9 @@ const userSchema = mongoose.model(Constants.CollectionNames.User, new mongoose.S
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, trim: true },
     password: { type: String, required: true, minlength: 6 },
-    role: { type: Number, default: 3 }
+    role: { type: Number, default: 3 },
+    verificationCode: String,
+    isVerified: { type: Boolean, default: false }
 }, { timestamps: true }))
 
 // Role: 1-Super Admin, 2-Admin, 3-Normal User

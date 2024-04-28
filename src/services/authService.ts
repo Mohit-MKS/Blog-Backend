@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
 
+import jwt from "jsonwebtoken";
 import config from "../config/config";
 
 const generateToken = (user) => {
@@ -18,4 +18,12 @@ const generateToken = (user) => {
     return token;
 }
 
-export { generateToken }
+
+
+const generateCode = (codeLength) => {
+    const number = String(Math.random()).split(".")[1].slice(0, codeLength || 4);
+    return number;
+}
+
+
+export { generateToken, generateCode }
