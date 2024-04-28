@@ -4,6 +4,8 @@ import bodyParser from 'body-parser';
 import config from './config/config';
 import mongodb from './db/mongodb';
 import authRoutes from './routes/authRoutes';
+import { errorHandler } from './middlewares/errorMiddleware'
+import { notFound } from './controllers/notfoundController';
 
 
 const app = express();
@@ -16,6 +18,10 @@ app.use(bodyParser.urlencoded({ limit: '500mb', extended: false }));
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/api/v1/auth", authRoutes)
+
+app.use('*', notFound)
+
+app.use(errorHandler)
 
 
 
