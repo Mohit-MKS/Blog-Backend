@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 
 const hashPassword = (password) => {
-    return new Promise((resolve, rejects) => {
+    return new Promise<string>((resolve, rejects) => {
         bcrypt.genSalt(12, (error, salt) => {
             if (error) {
                 return rejects(error);

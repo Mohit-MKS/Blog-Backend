@@ -53,7 +53,19 @@ const validateErrors = (req, res, next) => {
     return res.status(400).json({ message: errorsObj })
 }
 
+const resetPasswordValidator = [
+    ...validateEmail,
+
+    body("code")
+        .notEmpty().withMessage("Code is required"),
+
+    body("password")
+        .isLength({ min: 6 }).withMessage("Password should be min 6 characters long")
+        .notEmpty().withMessage("Password is required")
+
+]
 
 
 
-export { validateSignUp, validateSignIn, validateEmail, verifyUserValidator, validateErrors }
+
+export { validateSignUp, validateSignIn, validateEmail, verifyUserValidator, resetPasswordValidator, validateErrors }
