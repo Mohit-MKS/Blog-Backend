@@ -4,8 +4,8 @@ const validateSignUp = [
     body("name").notEmpty().withMessage("Name is required"),
 
     body("email")
-        .isEmail().withMessage("Invalid email")
-        .notEmpty().withMessage("Email is required"),
+        .notEmpty().withMessage("Email is required")
+        .isEmail().withMessage("Invalid email"),
 
     body("password")
         .isLength({ min: 6 }).withMessage("Password should be min 6 characters long")
@@ -30,6 +30,14 @@ const validateEmail = [
 ];
 
 
+const verifyUserValidator = [
+    ...validateEmail,
+
+    body("code")
+        .notEmpty().withMessage("Code is required")
+]
+
+
 const validateErrors = (req, res, next) => {
     const errors = validationResult(req);
     const errorsObj = {}
@@ -38,7 +46,8 @@ const validateErrors = (req, res, next) => {
 
 
     errors.array().map((error: any) => {
-        errorsObj[error.path] = error.msg;
+        if (!errorsObj[error.path])
+            errorsObj[error.path] = error.msg;
     })
 
     return res.status(400).json({ message: errorsObj })
@@ -47,4 +56,4 @@ const validateErrors = (req, res, next) => {
 
 
 
-export { validateSignUp, validateSignIn, validateEmail, validateErrors }
+export { validateSignUp, validateSignIn, validateEmail, verifyUserValidator, validateErrors }

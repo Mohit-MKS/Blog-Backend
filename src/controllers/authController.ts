@@ -84,4 +84,62 @@ const verifyCode = async (req, res, next) => {
     }
 }
 
-export default { signUp, signIn, verifyCode }
+
+const verifyUser = async (req, res, next) => {
+    try {
+        const { code, email } = req.body;
+        const user = await User.userSchema.findOne({ email });
+
+        if (!user) {
+            res.code = 404;
+            throw new Error("User not found")
+        }
+
+        if (user.verificationCode !== code) {
+            res.code = 400;
+            throw new Error("Invalid code")
+        }
+        user.isVerified = true;
+        user.verificationCode = null;
+        await user.save();
+
+        res.status(200).json({ code: 200, status: true, message: "User verified successfully" });
+
+
+    } catch (error) {
+        next(error);
+
+    }
+}
+
+
+const forgotPassword = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        const user = await User.userSchema.findOne({ email });
+
+        if (!user) {
+            res.code = 404;
+            throw new Error("User not found");
+        }
+
+        const code = generateCode(6);
+        user.forgotPasswordCode = code;
+        await user.save();
+
+        await sendEmail({
+            mailTo: user.email,
+            subject: "Forgot password code",
+            code,
+            content: "change your password"
+        })
+
+        res.status(200).json({ code: 200, status: true, message: "Forgot password code sent successfully" })
+
+    } catch (error) {
+        next(error);
+    }
+
+}
+
+export default { signUp, signIn, verifyCode, verifyUser, forgotPassword }

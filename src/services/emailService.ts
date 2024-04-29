@@ -23,7 +23,9 @@ const sendEmail = async ({ mailTo, subject, code, content }) => {
         `
     }
 
+    console.log('fff');
     await transporter.sendMail(message);
+    console.log('ggg');
 
 }
 
