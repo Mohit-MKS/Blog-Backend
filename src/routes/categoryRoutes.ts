@@ -2,7 +2,7 @@ import express from 'express';
 import categoryController from '../controllers/categoryController';
 import { validateAddCategory } from '../validators/categoryValidators';
 import { validateErrors } from '../validators/errorValidator';
-import { isAuth } from '../middlewares/isAuthMiddleware';
+import { isAuth } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
