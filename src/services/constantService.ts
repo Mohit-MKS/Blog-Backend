@@ -1,5 +1,6 @@
 export class Constants {
     static readonly CollectionNames = {
-        User: 'User'
+        User: 'User',
+        Category: 'Category'
     }
 }

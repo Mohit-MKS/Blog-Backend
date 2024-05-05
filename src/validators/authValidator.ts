@@ -1,4 +1,4 @@
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 
 const validateSignUp = [
     body("name").notEmpty().withMessage("Name is required"),
@@ -38,20 +38,6 @@ const verifyUserValidator = [
 ]
 
 
-const validateErrors = (req, res, next) => {
-    const errors = validationResult(req);
-    const errorsObj = {}
-    if (errors.isEmpty())
-        return next();
-
-
-    errors.array().map((error: any) => {
-        if (!errorsObj[error.path])
-            errorsObj[error.path] = error.msg;
-    })
-
-    return res.status(400).json({ message: errorsObj })
-}
 
 const resetPasswordValidator = [
     ...validateEmail,
@@ -68,4 +54,4 @@ const resetPasswordValidator = [
 
 
 
-export { validateSignUp, validateSignIn, validateEmail, verifyUserValidator, resetPasswordValidator, validateErrors }
+export { validateSignUp, validateSignIn, validateEmail, verifyUserValidator, resetPasswordValidator }
