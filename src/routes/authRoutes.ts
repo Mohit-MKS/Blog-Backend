@@ -1,18 +1,17 @@
 import express from 'express';
 import authController from '../controllers/authController';
-import { validateSignUp, validateSignIn, validateEmail, verifyUserValidator, resetPasswordValidator } from '../validators/authValidator';
-import { validateErrors } from '../validators/errorValidator';
+import authValidator from '../validators/authValidator';
 
 const router = express.Router();
 
-router.post("/signup", validateSignUp, validateErrors, authController.signUp)
-router.post("/signin", validateSignIn, validateErrors, authController.signIn)
+router.post("/signup", authValidator.validateSignUp, authController.signUp)
+router.post("/signin", authValidator.validateSignIn, authController.signIn)
 
 
-router.post("/send-verification-email", validateEmail, validateErrors, authController.verifyCode)
-router.post("/verify-user", verifyUserValidator, validateErrors, authController.verifyUser)
-router.post("/forgot-password-code", validateEmail, validateErrors, authController.forgotPassword)
-router.post("/reset-password", resetPasswordValidator, validateErrors, authController.resetPassword)
+router.post("/send-verification-email", authValidator.validateEmail, authController.verifyCode)
+router.post("/verify-user", authValidator.verifyUserValidator, authController.verifyUser)
+router.post("/forgot-password-code", authValidator.validateEmail, authController.forgotPassword)
+router.post("/reset-password", authValidator.resetPasswordValidator, authController.resetPassword)
 
 
 
