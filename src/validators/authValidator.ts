@@ -1,6 +1,5 @@
-import { body } from "express-validator";
+import { body, ValidationChain } from "express-validator";
 import { validateErrors } from "./errorValidator";
-import { MiddleWare } from "../models/types/middleware.types";
 
 const validateSignUp = [
   body("name").notEmpty().withMessage("Name is required"),
@@ -56,10 +55,10 @@ const resetPasswordValidator = [
 
 
 export default {
-  validateSignUp: [validateSignUp, validateErrors] as unknown as MiddleWare,
-  validateSignIn: [validateSignIn, validateErrors] as unknown as MiddleWare,
-  validateEmail: [validateEmail, validateErrors] as unknown as MiddleWare,
-  verifyUserValidator: [verifyUserValidator, validateErrors] as unknown as MiddleWare,
-  resetPasswordValidator: [resetPasswordValidator, validateErrors] as unknown as MiddleWare
+  validateSignUp: [validateSignUp, validateErrors] as ValidationChain[],
+  validateSignIn: [validateSignIn, validateErrors] as ValidationChain[],
+  validateEmail: [validateEmail, validateErrors] as ValidationChain[],
+  verifyUserValidator: [verifyUserValidator, validateErrors] as ValidationChain[],
+  resetPasswordValidator: [resetPasswordValidator, validateErrors] as ValidationChain[]
 }
 

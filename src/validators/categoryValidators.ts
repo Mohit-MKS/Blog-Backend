@@ -1,6 +1,5 @@
-import { body } from "express-validator";
+import { body, ValidationChain } from "express-validator";
 import { validateErrors } from "./errorValidator";
-import { MiddleWare } from "../models/types/middleware.types";
 
 const validateAddCategory = [
   body("name").notEmpty().withMessage("Name is required"),
@@ -16,4 +15,6 @@ const validateAddCategory = [
 
 ];
 
-export default { validateAddCategory: [validateAddCategory, validateErrors] as unknown as MiddleWare }
+export default {
+  validateAddCategory: [validateAddCategory, validateErrors] as ValidationChain[]
+}
