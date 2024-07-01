@@ -5,6 +5,7 @@ import { sendEmail } from "../services/emailService";
 import { NextFunction, Request } from "express";
 import { ApiResponse } from "../models/interfaces/response.interface";
 import { ApiRequest } from "../models/interfaces/requests.interface";
+import { IUser } from "../models/interfaces/user.interface";
 
 const signUp = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
@@ -177,7 +178,7 @@ const resetPassword = async (req: Request, res: ApiResponse, next: NextFunction)
 const changePassword = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   try {
     const { oldPassword, newPassword } = req.body;
-    const { _id } = req.user;
+    const { _id } = req.user as IUser;
     const user = await UserSchema.findById({ _id });
     if (!user) {
       res.code = 404;
