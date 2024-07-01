@@ -1,6 +1,7 @@
 import express from 'express';
 import authController from '../controllers/authController';
 import authValidator from '../validators/authValidator';
+import { isAuth } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
@@ -12,6 +13,8 @@ router.post("/send-verification-email", authValidator.validateEmail, authControl
 router.post("/verify-user", authValidator.verifyUserValidator, authController.verifyUser)
 router.post("/forgot-password-code", authValidator.validateEmail, authController.forgotPassword)
 router.post("/reset-password", authValidator.resetPasswordValidator, authController.resetPassword)
+router.post("/change-password", authValidator.resetPasswordValidator, isAuth, authController.resetPassword)
+router.post("/update-profile", authValidator.changePasswordValidator, authController.resetPassword)
 
 
 

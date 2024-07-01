@@ -171,4 +171,21 @@ const resetPassword = async (req, res, next) => {
   }
 }
 
+const changePassword = async (req, res, next) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const { _id } = req.user;
+    const user = await UserSchema.findById({ _id });
+    if (!user) {
+      res.code = 404;
+      throw new Error("User not found");
+    }
+
+    const match = await comparePassword(oldPassword, user.password)
+  } catch (error) {
+
+  }
+
+}
+
 export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword }
