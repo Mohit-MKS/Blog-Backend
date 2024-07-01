@@ -1,10 +1,11 @@
 interface IUser {
+    _id?:string;
     name: string;
     email: string;
     password: string;
     role: number
-    verificationCode: string;
-    forgotPasswordCode: string;
+    verificationCode: string | null;
+    forgotPasswordCode: string | null;
     isVerified: boolean
 }
 

@@ -2,8 +2,11 @@ import { UserSchema } from "../models/schemas/User";
 import { comparePassword, hashPassword } from "../services/encryptionService";
 import { generateToken, generateCode } from "../services/authService";
 import { sendEmail } from "../services/emailService";
+import { NextFunction, Request } from "express";
+import { ApiResponse } from "../models/interfaces/response.interface";
+import { ApiRequest } from "../models/interfaces/requests.interface";
 
-const signUp = async (req, res, next) => {
+const signUp = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { name, email, password, role } = req.body;
 
@@ -19,7 +22,7 @@ const signUp = async (req, res, next) => {
 
 }
 
-const signIn = async (req, res, next) => {
+const signIn = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { email, password } = req.body
     const user = await UserSchema.findOne({ email });
@@ -51,7 +54,7 @@ const signIn = async (req, res, next) => {
 
 }
 
-const verifyCode = async (req, res, next) => {
+const verifyCode = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { email } = req.body;
     const user = await UserSchema.findOne({ email })
@@ -85,7 +88,7 @@ const verifyCode = async (req, res, next) => {
 }
 
 
-const verifyUser = async (req, res, next) => {
+const verifyUser = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { code, email } = req.body;
     const user = await UserSchema.findOne({ email });
@@ -113,7 +116,7 @@ const verifyUser = async (req, res, next) => {
 }
 
 
-const forgotPassword = async (req, res, next) => {
+const forgotPassword = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { email } = req.body;
     const user = await UserSchema.findOne({ email });
@@ -142,7 +145,7 @@ const forgotPassword = async (req, res, next) => {
 
 }
 
-const resetPassword = async (req, res, next) => {
+const resetPassword = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { email, code, password } = req.body;
     const user = await UserSchema.findOne({ email });
@@ -171,7 +174,7 @@ const resetPassword = async (req, res, next) => {
   }
 }
 
-const changePassword = async (req, res, next) => {
+const changePassword = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   try {
     const { oldPassword, newPassword } = req.body;
     const { _id } = req.user;
