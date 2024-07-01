@@ -1,12 +1,16 @@
+import { ApiRequest } from "../models/interfaces/requests.interface";
+import { ApiResponse } from "../models/interfaces/response.interface";
 import { CategorySchema } from "../models/schemas/Category";
 import { UserSchema } from "../models/schemas/User";
+import { IUser } from "../models/interfaces/user.interface";
+import { NextFunction } from "express";
 
 
 
-const addCategory = async (req, res, next) => {
+const addCategory = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   try {
     const { title, desc } = req.body;
-    const { _id } = req.user
+    const { _id } = req.user as IUser
 
     const isCategory = await CategorySchema.findOne({ title });
     if (isCategory) {
