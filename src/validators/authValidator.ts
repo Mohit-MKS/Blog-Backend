@@ -52,6 +52,14 @@ const resetPasswordValidator = [
 
 ]
 
+const changePasswordValidator = [
+  body("oldPassword")
+    .notEmpty().withMessage("Old password is required"),
+
+  body("newPassword")
+    .notEmpty().withMessage("New password is required")
+]
+
 
 
 export default {
@@ -59,6 +67,7 @@ export default {
   validateSignIn: [validateSignIn, validateErrors] as ValidationChain[],
   validateEmail: [validateEmail, validateErrors] as ValidationChain[],
   verifyUserValidator: [verifyUserValidator, validateErrors] as ValidationChain[],
-  resetPasswordValidator: [resetPasswordValidator, validateErrors] as ValidationChain[]
+  resetPasswordValidator: [resetPasswordValidator, validateErrors] as ValidationChain[],
+  changePasswordValidator: [changePasswordValidator, validateErrors] as ValidationChain[],
 }
 
