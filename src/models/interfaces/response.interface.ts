@@ -1,7 +1,7 @@
 import { Response } from "express";
 
 interface ApiResponse extends Response {
-    code: number
+    code?: number;
 }
 
 export { ApiResponse }
