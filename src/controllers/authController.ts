@@ -217,7 +217,7 @@ const updateProfile = async (req: ApiRequest, res: ApiResponse, next: NextFuncti
       res.code = 404;
       throw new Error("User not found");
     }
-    
+
     user.name = name ? name : user.name;
     user.email = email ? email : user.email;
     if (email) {
@@ -231,4 +231,4 @@ const updateProfile = async (req: ApiRequest, res: ApiResponse, next: NextFuncti
   }
 }
 
-export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword, changePassword }
+export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword, changePassword, updateProfile }
