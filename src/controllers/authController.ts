@@ -186,10 +186,26 @@ const changePassword = async (req: ApiRequest, res: ApiResponse, next: NextFunct
     }
 
     const match = await comparePassword(oldPassword, user.password)
-  } catch (error) {
+    if (!match) {
+      res.code = 400;
+      throw new Error("Old password is incorrect");
+    }
 
+    if (oldPassword === newPassword) {
+      res.code = 400;
+      throw new Error("New and old password are same");
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+    user.password = hashedPassword;
+    await user.save()
+
+    res.status(200).json({ code: 200, status: true, message: "Password changed successfully" })
+
+  } catch (error) {
+    next(error);
   }
 
 }
 
-export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword }
+export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword, changePassword }
