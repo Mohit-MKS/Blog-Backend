@@ -179,7 +179,7 @@ const changePassword = async (req: ApiRequest, res: ApiResponse, next: NextFunct
   try {
     const { oldPassword, newPassword } = req.body;
     const { _id } = req.user as IUser;
-    const user = await UserSchema.findById({ _id });
+    const user = await UserSchema.findById(_id);
     if (!user) {
       res.code = 404;
       throw new Error("User not found");
@@ -206,6 +206,29 @@ const changePassword = async (req: ApiRequest, res: ApiResponse, next: NextFunct
     next(error);
   }
 
+}
+
+const updateProfile = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+  try {
+    const { _id } = req.user as IUser;
+    const { email, name } = req.body;
+    const user = await UserSchema.findById(_id)
+    if (!user) {
+      res.code = 404;
+      throw new Error("User not found");
+    }
+    
+    user.name = name ? name : user.name;
+    user.email = email ? email : user.email;
+    if (email) {
+      user.isVerified = false;
+    }
+    await user.save();
+    res.status(200).json({ code: 200, status: true, message: "User profile updated" })
+
+  } catch (error) {
+    next(error)
+  }
 }
 
 export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword, changePassword }
