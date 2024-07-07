@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { Constants } from "../../services/constantService";
 import { IUser } from "../interfaces/user.interface";
 
-const UserSchema = mongoose.model<IUser>(Constants.CollectionNames.User, new mongoose.Schema({
+const User = mongoose.model<IUser>(Constants.CollectionNames.User, new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true, trim: true },
   password: { type: String, required: true, minlength: 6 },
@@ -14,4 +14,4 @@ const UserSchema = mongoose.model<IUser>(Constants.CollectionNames.User, new mon
 
 // Role: 1-Super Admin, 2-Admin, 3-Normal User
 
-export { UserSchema }
+export { User }
