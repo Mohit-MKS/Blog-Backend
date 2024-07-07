@@ -54,7 +54,7 @@ const updateCategory = async (req: ApiRequest, res: ApiResponse, next: NextFunct
     existingCategory.updatedBy = _id;
     await existingCategory.save()
 
-    res.status(201).json({ code: 200, status: true, message: "Category updated successfully" })
+    res.status(201).json({ code: 200, status: true, message: "Category updated successfully", data: { category: existingCategory } })
 
   } catch (error) {
     next(error)
@@ -62,5 +62,41 @@ const updateCategory = async (req: ApiRequest, res: ApiResponse, next: NextFunct
 
 }
 
+const getCategories = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+  try {
+    const { search } = req.query
+    let searchQuery = {}
 
-export default { addCategory, updateCategory }
+    if (search) {
+      const regex = new RegExp(search as string, 'i')
+      searchQuery = { $or: [{ title: regex }, { desc: regex }] }
+    }
+    const categories = await Category.find(searchQuery)
+
+    res.status(200).json({ code: 200, status: true, message: "Categories fetched successfully", data: { categories } })
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+const deleteCategory = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+  try {
+    const { categoryId } = req.params
+    const deletedCategory = await Category.deleteOne({ _id: categoryId });
+    if (deletedCategory.deletedCount) {
+      res.status(201).json({ code: 200, status: true, message: "Category deleted successfully" })
+    }
+    else {
+      res.code = 400;
+      throw new Error("Something went wrong")
+    }
+
+  } catch (error) {
+    next(error)
+
+  }
+}
+
+
+export default { addCategory, updateCategory, deleteCategory, getCategories }
