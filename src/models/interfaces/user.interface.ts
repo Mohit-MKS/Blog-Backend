@@ -1,12 +1,14 @@
+import { ObjectId } from "mongoose";
+
 interface IUser {
-    _id?:string;
-    name: string;
-    email: string;
-    password: string;
-    role: number
-    verificationCode: string | null;
-    forgotPasswordCode: string | null;
-    isVerified: boolean
+  _id: ObjectId;
+  name: string;
+  email: string;
+  password: string;
+  role: number
+  verificationCode: string | null;
+  forgotPasswordCode: string | null;
+  isVerified: boolean
 }
 
 export { IUser }
