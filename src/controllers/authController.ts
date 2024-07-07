@@ -1,4 +1,4 @@
-import { UserSchema } from "../models/schemas/User";
+import { User } from "../models/schemas/User";
 import { comparePassword, hashPassword } from "../services/encryptionService";
 import { generateToken, generateCode } from "../services/authService";
 import { sendEmail } from "../services/emailService";
@@ -13,7 +13,7 @@ const signUp = async (req: Request, res: ApiResponse, next: NextFunction) => {
 
     const hashedPassword = await hashPassword(password);
 
-    const newUser = await UserSchema.create({ name, email, password: hashedPassword, role })
+    const newUser = await User.create({ name, email, password: hashedPassword, role })
     if (newUser)
       res.status(201).json({ message: "User registered successfully" })
 
@@ -26,7 +26,7 @@ const signUp = async (req: Request, res: ApiResponse, next: NextFunction) => {
 const signIn = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { email, password } = req.body
-    const user = await UserSchema.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
       res.code = 401;
       throw new Error("Invalid Credential")
@@ -58,7 +58,7 @@ const signIn = async (req: Request, res: ApiResponse, next: NextFunction) => {
 const verifyCode = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { email } = req.body;
-    const user = await UserSchema.findOne({ email })
+    const user = await User.findOne({ email })
     if (!user) {
       res.code = 404;
       throw new Error("User not found");
@@ -92,7 +92,7 @@ const verifyCode = async (req: Request, res: ApiResponse, next: NextFunction) =>
 const verifyUser = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { code, email } = req.body;
-    const user = await UserSchema.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       res.code = 404;
@@ -120,7 +120,7 @@ const verifyUser = async (req: Request, res: ApiResponse, next: NextFunction) =>
 const forgotPassword = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { email } = req.body;
-    const user = await UserSchema.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       res.code = 404;
@@ -149,7 +149,7 @@ const forgotPassword = async (req: Request, res: ApiResponse, next: NextFunction
 const resetPassword = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
     const { email, code, password } = req.body;
-    const user = await UserSchema.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       res.code = 404;
@@ -179,7 +179,7 @@ const changePassword = async (req: ApiRequest, res: ApiResponse, next: NextFunct
   try {
     const { oldPassword, newPassword } = req.body;
     const { _id } = req.user as IUser;
-    const user = await UserSchema.findById({ _id });
+    const user = await User.findById({ _id });
     if (!user) {
       res.code = 404;
       throw new Error("User not found");
