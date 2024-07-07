@@ -186,10 +186,49 @@ const changePassword = async (req: ApiRequest, res: ApiResponse, next: NextFunct
     }
 
     const match = await comparePassword(oldPassword, user.password)
-  } catch (error) {
+    if (!match) {
+      res.code = 400;
+      throw new Error("Old password is incorrect");
+    }
 
+    if (oldPassword === newPassword) {
+      res.code = 400;
+      throw new Error("New and old password are same");
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+    user.password = hashedPassword;
+    await user.save()
+
+    res.status(200).json({ code: 200, status: true, message: "Password changed successfully" })
+
+  } catch (error) {
+    next(error);
   }
 
 }
 
-export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword }
+const updateProfile = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+  try {
+    const { _id } = req.user as IUser;
+    const { email, name } = req.body;
+    const user = await User.findById(_id)
+    if (!user) {
+      res.code = 404;
+      throw new Error("User not found");
+    }
+
+    user.name = name ? name : user.name;
+    user.email = email ? email : user.email;
+    if (email) {
+      user.isVerified = false;
+    }
+    await user.save();
+    res.status(200).json({ code: 200, status: true, message: "User profile updated" })
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword, changePassword, updateProfile }

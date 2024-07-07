@@ -1,5 +1,6 @@
 import { body, ValidationChain } from "express-validator";
 import { validateErrors } from "./errorValidator";
+import validationService from "../services/validationService";
 
 const validateSignUp = [
   body("name").notEmpty().withMessage("Name is required"),
@@ -60,6 +61,17 @@ const changePasswordValidator = [
     .notEmpty().withMessage("New password is required")
 ]
 
+const updateProfile = [
+  body("email").custom(async (email) => {
+    if (email) {
+      const isValidEmail = validationService.validateEmail(email);
+      if (!isValidEmail) {
+        throw "Invalid email";
+      }
+    }
+  })
+]
+
 
 
 export default {
@@ -69,5 +81,6 @@ export default {
   verifyUserValidator: [verifyUserValidator, validateErrors] as ValidationChain[],
   resetPasswordValidator: [resetPasswordValidator, validateErrors] as ValidationChain[],
   changePasswordValidator: [changePasswordValidator, validateErrors] as ValidationChain[],
+  updateProfile: [updateProfile, validateErrors] as ValidationChain[],
 }
 
