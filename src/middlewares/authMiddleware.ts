@@ -36,7 +36,7 @@ const isAuth = (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   }
 }
 
-const idAdmin = (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+const isAdmin = (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   try {
     if (req.user && (req.user.role === 1 || req.user.role === 2)) {
       next();
@@ -52,4 +52,4 @@ const idAdmin = (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   }
 }
 
-export { isAuth, idAdmin }
+export { isAuth, isAdmin }
