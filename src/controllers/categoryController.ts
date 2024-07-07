@@ -4,6 +4,7 @@ import { Category } from "../models/schemas/Category";
 import { User } from "../models/schemas/User";
 import { IUser } from "../models/interfaces/user.interface";
 import { NextFunction } from "express";
+import { PipelineStage } from "mongoose";
 
 
 
@@ -64,16 +65,36 @@ const updateCategory = async (req: ApiRequest, res: ApiResponse, next: NextFunct
 
 const getCategories = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   try {
-    const { search } = req.query
-    let searchQuery = {}
-
+    const { search, pageSize, pageIndex } = req.query;
+    const pagesize = Number(pageSize) || 10;
+    const pageindex = Number(pageIndex) || 1;
+    const start = pagesize * (pageindex - 1);
+    let searchQuery = {} as PipelineStage;
     if (search) {
       const regex = new RegExp(search as string, 'i')
-      searchQuery = { $or: [{ title: regex }, { desc: regex }] }
+      searchQuery = { $match: { $or: [{ title: regex }, { desc: regex }] } }
     }
-    const categories = await Category.find(searchQuery)
+    const aggregationQuery: PipelineStage[] = [
+      searchQuery,
+      {
+        $facet: {
+          categories: [
+            { $skip: start },
+            { $limit: pagesize }
+          ],
+          pagination: [
+            { $count: 'total' }
+          ]
+        }
+      }
+    ]
 
-    res.status(200).json({ code: 200, status: true, message: "Categories fetched successfully", data: { categories } })
+    const result = await Category.aggregate(aggregationQuery)
+    const data = {
+      categories: result[0].categories,
+      pagination: result[0].pagination[0]
+    }
+    res.status(200).json({ code: 200, status: true, message: "Categories fetched successfully", data })
 
   } catch (error) {
     next(error)
