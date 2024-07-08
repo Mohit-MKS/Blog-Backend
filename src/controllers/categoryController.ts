@@ -119,5 +119,22 @@ const deleteCategory = async (req: ApiRequest, res: ApiResponse, next: NextFunct
   }
 }
 
+const getCategory = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+  try {
+    const { categoryId } = req.params;
+    const category = await Category.findById(categoryId);
 
-export default { addCategory, updateCategory, deleteCategory, getCategories }
+    if (!category) {
+      res.code = 404;
+      throw new Error("Category not found")
+    }
+
+    res.status(200).json({ code: 200, status: true, message: "Get category successfully", data: { category } })
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+export default { addCategory, updateCategory, deleteCategory, getCategories, getCategory }
