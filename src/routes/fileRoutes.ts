@@ -8,4 +8,7 @@ const router = express.Router();
 
 router.post('/upload', isAuth, upload.single('file'), fileController.uploadFile)
 
+// for multiple files ↓↓↓
+// router.post('/upload', isAuth, upload.array('file', 5), fileController.uploadFile)
+
 export = router
