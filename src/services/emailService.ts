@@ -1,5 +1,10 @@
 import nodeMailer from "nodemailer";
 import config from "../config/config";
+import { decrypt } from "./encryptionService";
+
+
+const decryptedEmail = decrypt(config.SENDER_EMAIL)
+const decryptedPassword = decrypt(config.SENDER_PASSWORD)
 
 const sendEmail = async ({ mailTo, subject, code, content }: SendEmailParams) => {
   const transporter = nodeMailer.createTransport({
@@ -7,8 +12,8 @@ const sendEmail = async ({ mailTo, subject, code, content }: SendEmailParams) =>
     port: 587,
     secure: false,
     auth: {
-      user: config.SENDER_EMAIL,
-      pass: config.SENDER_PASSWORD
+      user: decryptedEmail,
+      pass: decryptedPassword
     }
   });
 
