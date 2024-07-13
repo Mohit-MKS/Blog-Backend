@@ -1,17 +1,26 @@
 import mongoose from "mongoose";
 import config from "../config/config";
-import { decrypt } from "../services/encryptionService";
+
+let db: mongoose.Mongoose;
 
 const connectDB = async () => {
   try {
-    const decryptedMongoUrl = decrypt(config.MONGO_URL)
-    const decryptedMongoPass = decrypt(config.MONGO_PASSWORD)
-    const MONGOURL = `mongodb+srv://${decryptedMongoPass}@${decryptedMongoUrl}/blog?retryWrites=true&w=majority&appName=blogApi`
-    await mongoose.connect(MONGOURL);
+    db = await mongoose.connect(config.MONGO_CONNECTION_URL);
     console.log('Database Connected Successfully');
   } catch (error: any) {
     console.log(error.message);
   }
 }
 
-export default { connectDB };
+const dbInstance = async () => {
+  try {
+    if (!db) {
+      await connectDB();
+    }
+    return db;
+  } catch (error: any) {
+    console.log(error.message);
+  }
+}
+
+export default { connectDB, dbInstance };
