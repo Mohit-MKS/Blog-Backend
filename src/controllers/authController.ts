@@ -3,9 +3,8 @@ import { comparePassword, hashPassword } from "../services/encryptionService";
 import { generateToken, generateCode } from "../services/authService";
 import { sendEmail } from "../services/emailService";
 import { NextFunction, Request } from "express";
-import { ApiResponse } from "../models/interfaces/response.interface";
-import { ApiRequest } from "../models/interfaces/requests.interface";
 import { IUser } from "../models/interfaces/user.interface";
+import { ApiRequest, ApiResponse } from "../models/interfaces/common.interfaces";
 
 const signUp = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {

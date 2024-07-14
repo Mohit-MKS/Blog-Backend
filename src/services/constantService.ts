@@ -1,7 +1,8 @@
 export class Constants {
   static readonly CollectionNames = {
     User: 'User',
-    Category: 'Category'
+    Category: 'Category',
+    File: 'File'
   }
 
   static readonly AllowedFileTypes = [
