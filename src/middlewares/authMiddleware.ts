@@ -1,8 +1,7 @@
 import jwt, { Secret } from "jsonwebtoken";
 import config from "../config/config";
-import { ApiRequest } from "../models/interfaces/requests.interface";
-import { ApiResponse } from "../models/interfaces/response.interface";
 import { NextFunction } from "express";
+import { ApiRequest, ApiResponse } from "../models/interfaces/common.interfaces";
 
 const isAuth = (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   try {

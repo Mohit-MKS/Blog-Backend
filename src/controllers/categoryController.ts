@@ -1,10 +1,9 @@
-import { ApiRequest } from "../models/interfaces/requests.interface";
-import { ApiResponse } from "../models/interfaces/response.interface";
 import { Category } from "../models/schemas/Category";
 import { User } from "../models/schemas/User";
 import { IUser } from "../models/interfaces/user.interface";
 import { NextFunction } from "express";
 import { PipelineStage } from "mongoose";
+import { ApiRequest, ApiResponse } from "../models/interfaces/common.interfaces";
 
 
 

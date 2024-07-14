@@ -1,6 +1,5 @@
 import { NextFunction } from "express";
-import { ApiRequest } from "../models/interfaces/requests.interface";
-import { ApiResponse } from "../models/interfaces/response.interface";
+import { ApiRequest, ApiResponse } from "../models/interfaces/common.interfaces";
 
 const errorHandler = (error: Error, req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   const code = res.code ? res.code : 500;

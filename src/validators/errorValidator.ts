@@ -1,7 +1,7 @@
 import { validationResult } from "express-validator";
-import { ApiRequest } from "../models/interfaces/requests.interface";
-import { ApiResponse } from "../models/interfaces/response.interface";
+
 import { NextFunction } from "express";
+import { ApiRequest, ApiResponse } from "../models/interfaces/common.interfaces";
 
 const validateErrors = (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   const errors = validationResult(req);

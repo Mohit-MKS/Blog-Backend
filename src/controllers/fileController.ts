@@ -1,6 +1,5 @@
 import { NextFunction } from "express";
-import { ApiRequest } from "../models/interfaces/requests.interface";
-import { ApiResponse } from "../models/interfaces/response.interface";
+import { ApiRequest, ApiResponse } from "../models/interfaces/common.interfaces";
 
 
 const uploadFile = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {

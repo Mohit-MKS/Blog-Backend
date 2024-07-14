@@ -5,7 +5,8 @@ interface IUser {
   name: string;
   email: string;
   password: string;
-  role: number
+  role: number;
+  profilePic?: File
   verificationCode: string | null;
   forgotPasswordCode: string | null;
   isVerified: boolean
