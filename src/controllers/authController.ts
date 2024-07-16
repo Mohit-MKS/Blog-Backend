@@ -229,5 +229,29 @@ const updateProfile = async (req: ApiRequest, res: ApiResponse, next: NextFuncti
     next(error)
   }
 }
+const updateProfilePic = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+  try {
+    const { _id } = req.user as IUser;
+    const user = await User.findById(_id)
+    if (!user) {
+      res.code = 404;
+      throw new Error("User not found");
+    }
+    if (req.file) {
+      user.profilePic = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      };
+      await user.save();
+      res.status(200).json({ code: 200, status: true, message: "User profile pic updated" })
+    } else {
+      res.status(400).send('No file uploaded');
+    }
 
-export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword, changePassword, updateProfile }
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword, changePassword, updateProfile, updateProfilePic }
