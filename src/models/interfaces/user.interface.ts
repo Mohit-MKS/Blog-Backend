@@ -6,7 +6,7 @@ interface IUser {
   email: string;
   password: string;
   role: number;
-  profilePic?: File
+  profilePic?: { data: Buffer, contentType: string }
   verificationCode: string | null;
   forgotPasswordCode: string | null;
   isVerified: boolean
