@@ -17,6 +17,8 @@ router.post("/reset-password", authValidator.resetPasswordValidator, authControl
 router.post("/change-password", authValidator.resetPasswordValidator, isAuth, authController.changePassword)
 router.post("/update-profile", authValidator.updateProfile, isAuth, authController.updateProfile)
 router.post("/update-profile-pic", isAuth, upload.single('profilePic'), authController.updateProfilePic)
+router.get("/get-login-user", isAuth, authController.getLoginUser)
+
 
 
 
