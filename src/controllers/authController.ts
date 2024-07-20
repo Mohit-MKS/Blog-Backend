@@ -253,5 +253,31 @@ const updateProfilePic = async (req: ApiRequest, res: ApiResponse, next: NextFun
   }
 }
 
+const getLoginUser = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+  try {
+    const { _id } = req.user as IUser;
+    const user = await User.findById(_id).select("-password -verificationCode -forgotPasswordCode")
+    if (!user) {
+      res.code = 404;
+      throw new Error("User not found");
+    }
 
-export default { signUp, signIn, verifyCode, verifyUser, forgotPassword, resetPassword, changePassword, updateProfile, updateProfilePic }
+    const userObj = user.toObject()
+    const profilePicBase64 = user.profilePic ? user.profilePic.data.toString('base64') : null;
+    const profilePicDataURL = profilePicBase64 ? `data:${user.profilePic?.contentType};base64,${profilePicBase64}` : null;
+    delete userObj.profilePic
+    userObj.userPic = profilePicDataURL
+
+    res.status(200).json({ code: 200, status: true, message: "Get current user successful", data: { user: userObj } })
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+
+export default {
+  signUp, signIn, verifyCode, verifyUser,
+  forgotPassword, resetPassword, changePassword,
+  updateProfile, updateProfilePic, getLoginUser
+}
