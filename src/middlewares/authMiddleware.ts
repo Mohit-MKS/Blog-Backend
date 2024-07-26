@@ -2,6 +2,7 @@ import jwt, { Secret } from "jsonwebtoken";
 import config from "../config/config";
 import { NextFunction } from "express";
 import { ApiRequest, ApiResponse } from "../models/interfaces/common.interfaces";
+import { IUser } from "../models/interfaces/user.interface";
 
 const isAuth = (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   try {
@@ -9,7 +10,7 @@ const isAuth = (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
     const token = authorization.length > 1 ? authorization[1] : null;
 
     if (token) {
-      const payload: any = jwt.verify(token, config.JWT_SECRET as Secret);
+      const payload = jwt.verify(token, config.JWT_SECRET as Secret) as IUser;
       if (payload) {
         req.user = {
           _id: payload._id,

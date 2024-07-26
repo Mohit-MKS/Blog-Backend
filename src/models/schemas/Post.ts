@@ -1,5 +1,6 @@
 import { model, Schema, Types } from "mongoose";
 import { Constants } from "../../services/constantService";
+import { IPost } from "../interfaces/post.interface";
 
 const postSchema = new Schema({
   title: { type: String, required: true },
@@ -11,6 +12,6 @@ const postSchema = new Schema({
   timestamps: true
 })
 
-const Post = model(Constants.CollectionNames.Post, postSchema);
+const Post = model<IPost>(Constants.CollectionNames.Post, postSchema);
 
 export { Post }
