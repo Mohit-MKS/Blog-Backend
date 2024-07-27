@@ -1,11 +1,11 @@
-import { Types } from "mongoose"
+import { ObjectId } from "mongoose"
 
 interface IPost {
   title: string
   desc: string,
   file: { data: Buffer, contentType: string },
-  category: Types.ObjectId,
-  updatedBy: Types.ObjectId,
+  category: ObjectId,
+  updatedBy: ObjectId,
 }
 
 export { IPost }

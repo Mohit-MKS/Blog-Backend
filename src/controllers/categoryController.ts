@@ -24,7 +24,7 @@ const addCategory = async (req: ApiRequest, res: ApiResponse, next: NextFunction
       throw new Error("User not found");
     }
 
-    const newCategory = await Category.create({ title, desc, updatedBy: _id })
+    await Category.create({ title, desc, updatedBy: _id })
     res.status(201).json({ code: 200, status: true, message: "Category created successfully" })
 
   } catch (error) {

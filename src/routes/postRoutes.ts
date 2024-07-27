@@ -6,7 +6,7 @@ import { upload } from "../middlewares/fileMiddlewares";
 
 
 const router = Router();
-
 router.post('/', isAuth, upload.single('file'), postValidators.validatePost, postController.addPost)
+router.put('/:postId', isAuth, upload.single('file'), postValidators.validateUpdatePost, postController.updatePost)
 
 export = router;

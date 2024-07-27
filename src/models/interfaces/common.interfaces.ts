@@ -6,9 +6,19 @@ interface ApiRequest extends Request {
 }
 
 
-
-interface ApiResponse extends Response {
+interface ApiResponse<T = TResponseJson> extends Response {
   code?: number;
+  json: (body: T) => this
+}
+
+interface TResponseJson {
+  code?: number;
+  status?: boolean;
+  message?: string;
+  ok?: boolean;
+  stack?: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data?: any
 }
 
 

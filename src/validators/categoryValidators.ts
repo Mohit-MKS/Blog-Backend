@@ -8,7 +8,6 @@ const validateAddCategory = [
   body("desc")
     .notEmpty().withMessage("Description is required"),
 
-
 ];
 
 export default {
