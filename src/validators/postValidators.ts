@@ -1,6 +1,15 @@
-import { body, ValidationChain } from "express-validator";
+import { body, param, ValidationChain } from "express-validator";
 import { validateErrors } from "./errorValidator";
 import { Types } from "mongoose";
+
+const validateId = [
+  param("postId").custom(async (id) => {
+    if (id && !Types.ObjectId.isValid(id)) {
+      throw "Invalid object id"
+    }
+  })
+];
+
 
 
 const postValidator = [
@@ -14,6 +23,13 @@ const postValidator = [
     })
 ]
 
+
+const updatePostValidator = [
+  ...validateId
+]
+
+
 export default {
   validatePost: [postValidator, validateErrors] as ValidationChain[],
+  validateUpdatePost: [updatePostValidator, validateErrors] as ValidationChain[]
 }
