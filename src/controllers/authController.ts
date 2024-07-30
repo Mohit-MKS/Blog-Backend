@@ -262,7 +262,7 @@ const getLoginUser = async (req: ApiRequest, res: ApiResponse, next: NextFunctio
       throw new Error("User not found");
     }
     const userObj = user.toObject()
-    const profilePicBase64 = user.profilePic ? user.profilePic.buffer.toString('base64') : null;
+    const profilePicBase64 = user.profilePic ? user.profilePic.buffer?.toString('base64') : null;
     const profilePicDataURL = profilePicBase64 ? `data:${user.profilePic?.mimetype};base64,${profilePicBase64}` : null;
     delete userObj.profilePic
     userObj.userPic = profilePicDataURL

@@ -18,6 +18,27 @@ app.use(express.json({ limit: '500mb' }))
 
 
 app.use(bodyParser.urlencoded({ limit: '500mb', extended: false }));
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin as string;
+  // const allowedOrigin = process.env.ALLOWED_DOMAINS;
+  // if (allowedOrigin && allowedOrigin.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  // }
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization,Tokenuserid,Appid,refreshtoken,app_key,app_secret"
+  );
+  res.header("Access-Control-Expose-Headers", "tokens");
+  if (req.method === "OPTIONS") {
+    res.header(
+      "Access-Control-Allow-Methods",
+      "PUT, POST, PATCH, DELETE, GET"
+    );
+    return res.status(200).json({});
+  }
+  next();
+});
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/api/v1/auth", authRoutes);
