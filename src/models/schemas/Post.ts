@@ -5,7 +5,7 @@ import { IPost } from "../interfaces/post.interface";
 const postSchema = new Schema({
   title: { type: String, required: true },
   desc: String,
-  file: { data: Buffer, contentType: String },
+  file: { buffer: Buffer, mimetype: String },
   category: { type: Types.ObjectId, ref: Constants.CollectionNames.Category, required: true },
   updatedBy: { type: Types.ObjectId, ref: Constants.CollectionNames.User, required: true }
 }, {

@@ -6,7 +6,7 @@ interface IUser {
   email: string;
   password: string;
   role: number;
-  profilePic?: { data: Buffer, contentType: string };
+  profilePic?: { buffer: Buffer, mimetype: string };
   userPic: string | null;
   verificationCode: string | null;
   forgotPasswordCode: string | null;
