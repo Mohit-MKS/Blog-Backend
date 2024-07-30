@@ -239,8 +239,8 @@ const updateProfilePic = async (req: ApiRequest, res: ApiResponse, next: NextFun
     }
     if (req.file) {
       user.profilePic = {
-        data: req.file.buffer,
-        contentType: req.file.mimetype
+        buffer: req.file.buffer,
+        mimetype: req.file.mimetype
       };
       await user.save();
       res.status(200).json({ code: 200, status: true, message: "User profile pic updated" })
@@ -261,13 +261,11 @@ const getLoginUser = async (req: ApiRequest, res: ApiResponse, next: NextFunctio
       res.code = 404;
       throw new Error("User not found");
     }
-
     const userObj = user.toObject()
-    const profilePicBase64 = user.profilePic ? user.profilePic.data.toString('base64') : null;
-    const profilePicDataURL = profilePicBase64 ? `data:${user.profilePic?.contentType};base64,${profilePicBase64}` : null;
+    const profilePicBase64 = user.profilePic ? user.profilePic.buffer.toString('base64') : null;
+    const profilePicDataURL = profilePicBase64 ? `data:${user.profilePic?.mimetype};base64,${profilePicBase64}` : null;
     delete userObj.profilePic
     userObj.userPic = profilePicDataURL
-
     res.status(200).json({ code: 200, status: true, message: "Get current user successful", data: { user: userObj } })
 
   } catch (error) {
@@ -277,7 +275,14 @@ const getLoginUser = async (req: ApiRequest, res: ApiResponse, next: NextFunctio
 
 
 export default {
-  signUp, signIn, verifyCode, verifyUser,
-  forgotPassword, resetPassword, changePassword,
-  updateProfile, updateProfilePic, getLoginUser
+  signUp,
+  signIn,
+  verifyCode,
+  verifyUser,
+  forgotPassword,
+  resetPassword,
+  changePassword,
+  updateProfile,
+  updateProfilePic,
+  getLoginUser
 }

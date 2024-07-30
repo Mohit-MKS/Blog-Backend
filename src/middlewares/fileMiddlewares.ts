@@ -1,4 +1,4 @@
-import multer, { FileFilterCallback } from "multer";
+import multer, { FileFilterCallback, StorageEngine } from "multer";
 import path from "path";
 import { generateCode } from "../services/authService";
 import { Constants } from "../services/constantService";
@@ -26,7 +26,6 @@ import { Request } from "express";
 // });
 
 // const storage = multer.memoryStorage()
-
 const fileFilter = (req: Request, file: Express.Multer.File, callback: FileFilterCallback) => {
   const mimetype = file.mimetype;
   if (Constants.AllowedFileTypes.includes(mimetype)) {
