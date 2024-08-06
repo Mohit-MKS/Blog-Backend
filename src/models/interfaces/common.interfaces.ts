@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { IUser } from "./user.interface";
+import { Types } from "mongoose";
 
 interface ApiRequest extends Request {
   user?: Partial<IUser>
@@ -21,6 +22,12 @@ interface TResponseJson {
   data?: any
 }
 
+interface IFile {
+  _id: Types.ObjectId;
+  data: Buffer,
+  contentType: string
+}
+
 
 interface IEvironment {
   PORT: string,
@@ -32,4 +39,4 @@ interface IEvironment {
 }
 
 
-export { ApiRequest, ApiResponse, IEvironment }
+export { ApiRequest, ApiResponse, IFile, IEvironment }

@@ -4,7 +4,8 @@ import { generateToken, generateCode } from "../services/authService";
 import { sendEmail } from "../services/emailService";
 import { NextFunction, Request } from "express";
 import { IUser } from "../models/interfaces/user.interface";
-import { ApiRequest, ApiResponse } from "../models/interfaces/common.interfaces";
+import { ApiRequest, ApiResponse, IFile } from "../models/interfaces/common.interfaces";
+import { File } from "../models/schemas/File";
 
 const signUp = async (req: Request, res: ApiResponse, next: NextFunction) => {
   try {
@@ -238,10 +239,8 @@ const updateProfilePic = async (req: ApiRequest, res: ApiResponse, next: NextFun
       throw new Error("User not found");
     }
     if (req.file) {
-      user.profilePic = {
-        buffer: req.file.buffer,
-        mimetype: req.file.mimetype
-      };
+      const file = await File.create({ data: req.file.buffer, contentType: req.file.mimetype })
+      user.profilePic = file?._id;
       await user.save();
       res.status(200).json({ code: 200, status: true, message: "User profile pic updated" })
     } else {
@@ -256,14 +255,14 @@ const updateProfilePic = async (req: ApiRequest, res: ApiResponse, next: NextFun
 const getLoginUser = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   try {
     const { _id } = req.user as IUser;
-    const user = await User.findById(_id).select("-password -verificationCode -forgotPasswordCode")
+    const user = await User.findById(_id).select("-password -verificationCode -forgotPasswordCode").populate('profilePic')
     if (!user) {
       res.code = 404;
       throw new Error("User not found");
     }
     const userObj = user.toObject()
-    const profilePicBase64 = user.profilePic ? user.profilePic.buffer?.toString('base64') : null;
-    const profilePicDataURL = profilePicBase64 ? `data:${user.profilePic?.mimetype};base64,${profilePicBase64}` : null;
+    const profilePicBase64 = user.profilePic ? (user.profilePic as IFile).data?.toString('base64') : null;
+    const profilePicDataURL = profilePicBase64 ? `data:${(user.profilePic as IFile)?.contentType};base64,${profilePicBase64}` : null;
     delete userObj.profilePic
     userObj.userPic = profilePicDataURL
     res.status(200).json({ code: 200, status: true, message: "Get current user successful", data: { user: userObj } })
