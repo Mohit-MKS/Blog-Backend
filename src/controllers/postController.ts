@@ -1,9 +1,10 @@
 import { NextFunction } from "express"
-import { ApiRequest, ApiResponse } from "../models/interfaces/common.interfaces"
+import { ApiRequest, ApiResponse, IFile } from "../models/interfaces/common.interfaces"
 import { IUser } from "../models/interfaces/user.interface";
 import { Post } from "../models/schemas/Post";
 import { Category } from "../models/schemas/Category";
 import { PipelineStage } from "mongoose";
+import { File } from "../models/schemas/File";
 
 
 const addPost = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
@@ -16,9 +17,12 @@ const addPost = async (req: ApiRequest, res: ApiResponse, next: NextFunction) =>
       res.code = 404;
       throw new Error("Category not found");
     }
+    let file: IFile | undefined
+    if (req.file) {
+      file = await File.create({ data: req.file.buffer, contentType: req.file.mimetype })
+    }
 
-
-    await Post.create({ title, desc, file: req.file, category, updatedBy: _id });
+    await Post.create({ title, desc, file: file?._id, category, updatedBy: _id });
     res.status(201).json({ code: 201, status: true, message: "Post added successfully" });
     /* empty */
 
@@ -30,7 +34,6 @@ const addPost = async (req: ApiRequest, res: ApiResponse, next: NextFunction) =>
 
 const getPosts = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   try {
-
     const { search, pageSize, pageIndex } = req.query;
     const pagesize = Number(pageSize) || 10;
     const pageindex = Number(pageIndex) || 1;
