@@ -1,4 +1,5 @@
-import { ObjectId } from "mongoose";
+import { ObjectId, Types } from "mongoose";
+import { IFile } from "./common.interfaces";
 
 interface IUser {
   _id: ObjectId;
@@ -6,7 +7,7 @@ interface IUser {
   email: string;
   password: string;
   role: number;
-  profilePic?: { buffer: Buffer, mimetype: string };
+  profilePic?: Types.ObjectId | IFile;
   userPic: string | null;
   verificationCode: string | null;
   forgotPasswordCode: string | null;
