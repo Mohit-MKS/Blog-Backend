@@ -40,5 +40,5 @@ const updatePostValidator = [
 export default {
   validatePost: [postValidator, validateErrors] as ValidationChain[],
   validateUpdatePost: [updatePostValidator, validateErrors] as ValidationChain[],
-  validateDeletePost: [postIdValidator, validateErrors] as ValidationChain[]
+  validatePostId: [postIdValidator, validateErrors] as ValidationChain[]
 }

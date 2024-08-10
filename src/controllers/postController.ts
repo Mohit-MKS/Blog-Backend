@@ -107,6 +107,23 @@ const updatePost = async (req: ApiRequest, res: ApiResponse, next: NextFunction)
   }
 }
 
+const getPostDetails = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
+  try {
+    const { postId } = req.params;
+    const post = await Post.findById(postId).populate('updatedBy', '-password -isVerified').populate('category');
+
+    if (!post) {
+      res.code = 404;
+      throw new Error("Post not found");
+    }
+    res.status(200).json({ code: 200, status: true, message: "Get post successful", data: { post } })
+
+  } catch (error) {
+    next(error)
+
+  }
+}
+
 const deletePost = async (req: ApiRequest, res: ApiResponse, next: NextFunction) => {
   try {
     const { postId } = req.params;
@@ -124,4 +141,4 @@ const deletePost = async (req: ApiRequest, res: ApiResponse, next: NextFunction)
   }
 }
 
-export default { addPost, getPosts, updatePost, deletePost }
+export default { addPost, getPosts, getPostDetails, updatePost, deletePost }
