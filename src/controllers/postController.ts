@@ -57,8 +57,6 @@ const getPosts = async (req: ApiRequest, res: ApiResponse, next: NextFunction) =
         }
       }
     ]
-    console.log(aggregationQuery);
-
 
     const result = await Post.aggregate(aggregationQuery)
 
@@ -120,7 +118,6 @@ const getPostDetails = async (req: ApiRequest, res: ApiResponse, next: NextFunct
 
   } catch (error) {
     next(error)
-
   }
 }
 
@@ -130,8 +127,7 @@ const deletePost = async (req: ApiRequest, res: ApiResponse, next: NextFunction)
     const deletedPost = await Post.deleteOne({ _id: postId });
     if (deletedPost.deletedCount) {
       res.status(201).json({ code: 200, status: true, message: "Post deleted successfully" })
-    }
-    else {
+    } else {
       res.code = 400;
       throw new Error("Something went wrong")
     }

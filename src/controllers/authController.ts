@@ -47,10 +47,8 @@ const signIn = async (req: Request, res: ApiResponse, next: NextFunction) => {
       }
     )
 
-
   } catch (error) {
     next(error)
-
   }
 
 }
@@ -84,7 +82,6 @@ const verifyCode = async (req: Request, res: ApiResponse, next: NextFunction) =>
 
   } catch (error) {
     next(error)
-
   }
 }
 
@@ -109,10 +106,8 @@ const verifyUser = async (req: Request, res: ApiResponse, next: NextFunction) =>
 
     res.status(200).json({ code: 200, status: true, message: "User verified successfully" });
 
-
   } catch (error) {
     next(error);
-
   }
 }
 

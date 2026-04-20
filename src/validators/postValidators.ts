@@ -11,7 +11,6 @@ const postIdValidator = [
 ];
 
 
-
 const postValidator = [
   body("title").notEmpty().withMessage("Title is required"),
 

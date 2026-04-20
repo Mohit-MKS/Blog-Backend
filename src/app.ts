@@ -52,7 +52,6 @@ app.use('*', notFound)
 app.use(errorHandler)
 
 
-
 app.listen(config.PORT, () => {
   console.log('\n\nServer running on PORT:', config.PORT);
 });

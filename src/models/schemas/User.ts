@@ -7,7 +7,7 @@ const User = mongoose.model<IUser>(Constants.CollectionNames.User, new mongoose.
   email: { type: String, required: true, unique: true, trim: true },
   password: { type: String, required: true, minlength: 6 },
   role: { type: Number, default: 3 },
-  profilePic: { type: mongoose.Types.ObjectId, ref: Constants.CollectionNames.File, required: true },
+  profilePic: { type: mongoose.Types.ObjectId, ref: Constants.CollectionNames.File },
   userPic: String,
   verificationCode: String,
   forgotPasswordCode: String,

@@ -31,11 +31,13 @@ interface IFile {
 
 interface IEvironment {
   PORT: string,
-  MONGO_URL: string,
-  MONGO_PASSWORD: string,
+  MONGO_URL?: string,
+  MONGO_PASSWORD?: string,
+  MONGO_CONNECTION_URL?: string,
   JWT_SECRET: string,
   SENDER_EMAIL: string,
-  SENDER_PASSWORD: string
+  SENDER_PASSWORD: string,
+  ENV_VALUES_ENCRYPTED?: string
 }
 
 

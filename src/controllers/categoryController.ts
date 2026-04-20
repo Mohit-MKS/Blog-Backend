@@ -114,7 +114,6 @@ const deleteCategory = async (req: ApiRequest, res: ApiResponse, next: NextFunct
 
   } catch (error) {
     next(error)
-
   }
 }
 
