@@ -4,9 +4,9 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "start": "nodemon --exec ts-node src/app.ts",
-    "local": "set NODE_ENV=local&& nodemon src/app.ts",
-    "dev": "set NODE_ENV=development&& nodemon src/app.ts",
+    "start": "tsx watch src/app.ts",
+    "local": "set NODE_ENV=local&& tsx watch src/app.ts",
+    "dev": "set NODE_ENV=development&& tsx watch src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -37,8 +37,7 @@
     "@types/nodemailer": "^6.4.14",
     "eslint": "^9.7.0",
     "globals": "^15.8.0",
-    "nodemon": "^3.1.0",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.22.4",
     "typescript": "^5.4.4",
     "typescript-eslint": "^8.58.2"
   }
