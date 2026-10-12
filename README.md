@@ -1,47 +1,117 @@
-# Blog Backend API
+# Blog Backend API (NestJS Microservice)
 
-A TypeScript + Express backend for a blog platform with:
-- JWT-based authentication
-- Role-based access control (Super Admin, Admin, User)
-- Category and post management
-- File upload support (memory upload + MongoDB storage)
-- Email-based verification and password reset
+A NestJS backend microservice for a blog platform converted with standard architectural patterns and practices:
+- Modular architecture with Dependency Injection
+- JWT-based authentication using Passport (`@nestjs/passport` + `passport-jwt`)
+- Role-based access control (`@Roles` decorator and `RolesGuard`)
+- MongoDB with Mongoose (`@nestjs/mongoose`)
+- Strongly typed Data Transfer Objects (`class-validator` + `class-transformer`) organized by feature domain (all related DTOs grouped into single domain files)
+- Centralized exception filter (`AllExceptionsFilter`) ensuring backwards-compatible response payloads
+- File upload handling with Multer and format validation
+- Email verification and password reset via Nodemailer
 
 ## Tech Stack
 
-- Node.js
-- TypeScript
-- Express
-- MongoDB + Mongoose
-- JWT (`jsonwebtoken`)
-- Bcrypt (`bcryptjs`)
-- Nodemailer
-- Multer
-- Express Validator
+- **Framework**: NestJS 11
+- **Language**: TypeScript
+- **Database**: MongoDB + `@nestjs/mongoose` (Mongoose 7+)
+- **Authentication**: `@nestjs/jwt`, `@nestjs/passport`, `passport-jwt`
+- **Validation**: `class-validator`, `class-transformer`
+- **Security**: `bcryptjs`, AES-256-CBC secret decryption
+- **File Upload**: `@nestjs/platform-express` + `multer`
+- **Emailing**: `nodemailer`
 
 ## Project Structure
 
 ```text
 src/
-  app.ts
-  config/
-  controllers/
-  db/
-  middlewares/
-  models/
-  routes/
-  services/
-  validators/
-env/
-  local.env
-  development.env
+├── app.module.ts                         # Root application module
+├── main.ts                               # Application bootstrap & global pipes/filters
+├── common/                               # Cross-cutting utilities and decorators
+│   ├── constants/
+│   │   └── app.constants.ts              # Collection names, allowed file types, roles
+│   ├── decorators/
+│   │   ├── current-user.decorator.ts     # @CurrentUser() param decorator
+│   │   └── roles.decorator.ts            # @Roles() metadata decorator
+│   ├── filters/
+│   │   └── all-exceptions.filter.ts      # Global exception filter (matches microservice format)
+│   ├── guards/
+│   │   ├── jwt-auth.guard.ts             # JWT passport authentication guard
+│   │   └── roles.guard.ts                # Role-based access guard
+│   └── utils/
+│       ├── code-generator.util.ts        # Random verification code generator
+│       ├── encryption.util.ts            # Bcrypt hashing & AES cipher decryption
+│       ├── file-filter.util.ts           # Multer file type validator
+│       └── regex.util.ts                 # Reusable regex helpers
+├── config/
+│   ├── app-config.module.ts              # Global config module
+│   └── app-config.service.ts             # Environment variable loader & secret resolver
+└── modules/
+    ├── auth/                             # User authentication & profile management
+    │   ├── auth.controller.ts
+    │   ├── auth.module.ts
+    │   ├── auth.service.ts
+    │   ├── dto/
+    │   │   └── auth.dto.ts               # All Auth/User related DTOs grouped here
+    │   ├── schemas/
+    │   │   └── user.schema.ts
+    │   └── strategies/
+    │       └── jwt.strategy.ts
+    ├── category/                         # Category management (Admin only)
+    │   ├── category.controller.ts
+    │   ├── category.module.ts
+    │   ├── category.service.ts
+    │   ├── dto/
+    │   │   └── category.dto.ts           # All Category related DTOs grouped here
+    │   └── schemas/
+    │       └── category.schema.ts
+    ├── post/                             # Post management
+    │   ├── post.controller.ts
+    │   ├── post.module.ts
+    │   ├── post.service.ts
+    │   ├── dto/
+    │   │   └── post.dto.ts               # All Post related DTOs grouped here
+    │   └── schemas/
+    │       └── post.schema.ts
+    ├── file/                             # File uploads and storage
+    │   ├── file.controller.ts
+    │   ├── file.module.ts
+    │   ├── file.service.ts
+    │   └── schemas/
+    │       └── file.schema.ts
+    └── email/                            # Email delivery service
+        ├── email.module.ts
+        └── email.service.ts
 ```
+
+## DTO Organization
+
+As per requirements, related DTOs are consolidated within single files per domain:
+- `src/modules/auth/dto/auth.dto.ts`:
+  - `SignUpDto`
+  - `SignInDto`
+  - `SendVerificationEmailDto`
+  - `ForgotPasswordDto`
+  - `VerifyUserDto`
+  - `ResetPasswordDto`
+  - `ChangePasswordDto`
+  - `UpdateProfileDto`
+- `src/modules/category/dto/category.dto.ts`:
+  - `CreateCategoryDto`
+  - `UpdateCategoryDto`
+  - `QueryCategoryDto`
+  - `CategoryParamDto`
+- `src/modules/post/dto/post.dto.ts`:
+  - `CreatePostDto`
+  - `UpdatePostDto`
+  - `QueryPostDto`
+  - `PostParamDto`
 
 ## Prerequisites
 
 - Node.js 18+
 - npm
-- MongoDB Atlas (or compatible MongoDB instance)
+- MongoDB Atlas (or local MongoDB instance)
 
 ## Installation
 
@@ -51,145 +121,81 @@ npm install
 
 ## Environment Configuration
 
-Environment files are loaded from:
+Environment files are loaded dynamically from:
 
 ```text
 env/<NODE_ENV>.env
 ```
 
-For example, with `NODE_ENV=development`, the app loads `env/development.env`.
+For example, when running with `NODE_ENV=development`, the app loads `env/development.env`.
 
-Add these keys:
+Keys:
 
 ```env
 PORT=3000
-ENV_VALUES_ENCRYPTED=true
-MONGO_CONNECTION_URL=<encrypted full mongodb connection string>
-JWT_SECRET=<jwt secret>
-SENDER_EMAIL=<encrypted sender email>
-SENDER_PASSWORD=<encrypted sender app password>
+ENV_VALUES_ENCRYPTED=false
+MONGO_CONNECTION_URL=mongodb://127.0.0.1:27017/blogDB
+JWT_SECRET=your_jwt_secret_key
+SENDER_EMAIL=your_email@gmail.com
+SENDER_PASSWORD=your_email_app_password
 ```
 
-### Important notes
+### Encrypted Values
 
-- By default, the app expects encrypted values for Mongo and sender creds (see `src/services/encryptionService.ts`).
-- Set `ENV_VALUES_ENCRYPTED=false` to use raw/plain values directly (useful for local setup).
-- Mongo supports both styles:
-  - `MONGO_CONNECTION_URL`: full connection string (recommended)
-  - Split Atlas style: `MONGO_URL` + `MONGO_PASSWORD` (legacy support)
-- Local Mongo (no auth) example:
-  - `ENV_VALUES_ENCRYPTED=false`
-  - `MONGO_CONNECTION_URL=mongodb://127.0.0.1:27017/blogDB`
+- By default, if `ENV_VALUES_ENCRYPTED=true`, encrypted values will be automatically decrypted using AES-256-CBC.
+- Set `ENV_VALUES_ENCRYPTED=false` to use plain text configuration strings.
 
-## Run the Project
+## Running the Application
 
 ```bash
-# default
+# Build the application
+npm run build
+
+# Start the application
 npm start
 
-# local env (Windows cmd syntax used in package scripts)
-npm run local
-
-# development env
+# Development mode with hot-reload
 npm run dev
+# or
+npm run start:dev
+
+# Production mode
+npm run start:prod
 ```
 
-Server base URL:
-
-```text
-http://localhost:3000
-```
-
-API base path:
-
-```text
-/api/v1
-```
-
-## Authentication
-
-Protected routes require:
-
-```http
-Authorization: Bearer <token>
-```
-
-Token is returned by `POST /api/v1/auth/signin`.
+Server base URL: `http://localhost:3000`
+API base path: `/api/v1`
 
 ## API Endpoints
 
 ### Auth (`/api/v1/auth`)
-
-- `POST /signup`
-- `POST /signin`
-- `POST /send-verification-email`
-- `POST /verify-user`
-- `POST /forgot-password-code`
-- `POST /reset-password`
-- `POST /change-password` (auth)
-- `POST /update-profile` (auth)
-- `POST /update-profile-pic` (auth, multipart `profilePic`)
-- `GET /get-login-user` (auth)
+- `POST /signup` - Register a new user
+- `POST /signin` - Authenticate user and receive JWT token
+- `POST /send-verification-email` - Send account verification code
+- `POST /verify-user` - Verify user account with code
+- `POST /forgot-password-code` - Send password reset code
+- `POST /reset-password` - Reset password with verification code
+- `POST /change-password` - Update password (Authenticated)
+- `POST /update-profile` - Update name or email (Authenticated)
+- `POST /update-profile-pic` - Update profile image (Authenticated, multipart `profilePic`)
+- `GET /get-login-user` - Fetch authenticated user details (Authenticated)
 
 ### Categories (`/api/v1/category`)
-
-All category routes require auth + admin/super-admin role.
-
-- `GET /`
-- `POST /`
-- `PUT /:categoryId`
-- `DELETE /:categoryId`
-- `GET /:categoryId`
+*Requires authentication and Admin/Super-Admin role (Role 1 or 2).*
+- `GET /` - List categories (paginated with search)
+- `POST /` - Create category
+- `GET /:categoryId` - Get category details
+- `PUT /:categoryId` - Update category
+- `DELETE /:categoryId` - Delete category
 
 ### Posts (`/api/v1/post`)
-
-All post routes require auth.
-
-- `POST /` (multipart `file`, body: `title`, `category`, optional `desc`)
-- `GET /` (supports `search`, `pageSize`, `pageIndex`)
-- `GET /:postId`
-- `PUT /:postId` (multipart `file`)
-- `DELETE /:postId`
+*Requires authentication.*
+- `POST /` - Create post (multipart with `file`, body `title`, `category`, `desc`)
+- `GET /` - List posts (paginated with search)
+- `GET /:postId` - Get post details
+- `PUT /:postId` - Update post (multipart `file`)
+- `DELETE /:postId` - Delete post
 
 ### Files (`/api/v1/file`)
-
-- `POST /upload` (auth, multipart `file`)
-
-## Response Pattern
-
-Most endpoints return:
-
-```json
-{
-  "code": 200,
-  "status": true,
-  "message": "Some message",
-  "data": {}
-}
-```
-
-Errors are handled centrally and return:
-
-```json
-{
-  "code": 400,
-  "status": false,
-  "message": "Error message",
-  "stack": "..."
-}
-```
-
-## Validation
-
-Request validation uses `express-validator`:
-- Auth payload checks (email/password/code)
-- Post/category id validation with MongoDB ObjectId checks
-- Required fields on post/category creation
-
-## Notes for Contributors
-
-- Lint config: `eslint.config.mjs`
-- TS config: `tsconfig.json`
-- Nodemon config: `nodemon.json`
-- No automated tests are currently configured (`npm test` is placeholder).
-
+*Requires authentication.*
+- `POST /upload` - Upload file (multipart `file`)
